@@ -1,0 +1,215 @@
+
+# 腾讯云AKSK信息
+AK:
+SK:
+
+region: ap-guangzhou
+
+
+start_time: "2023-12-16T00:00:00+08:00"
+end_time: "2024-01-15T00:00:00+08:00"
+
+
+# DescribeInstances接口提取的云服务器参数
+cvm_params:
+  - InstanceId
+  - InstanceName
+  - InstanceType
+  - CPU
+  - Memory
+  - Placement
+  - PrivateIpAddresses
+  - VirtualPrivateCloud
+  - SecurityGroupIds
+  - OsName
+  - SystemDisk
+  - DataDisks
+
+
+cvm_monitor_params:
+  # CPU利用率, 单位: %, 机器运行期间实时占用的 CPU 百分比, 统计粒度10s、60s、300s、3600s、86400s
+  - name: CpuUsage
+    period: 3600
+    unit: "%"
+
+  # 内存利用率, 单位: %, 用户实际内存使用率，不包括缓冲区与系统缓存占用的内存，除去缓存、buffer和剩余，用户实际使用内存与总内存之比, 统计粒度10s、60s、300s、3600s、86400s
+  - name: MemUsage
+    period: 3600
+    unit: "%"
+
+  # 磁盘利用率, 单位: %, 磁盘已使用容量占总容量的百分比（所有磁盘）, 统计粒度10s、60s、300s、3600s、86400s
+  - name: CvmDiskUsage
+    period: 3600
+    unit: "%"
+
+  # 内网出带宽, 单位: Mbps, 内网网卡的平均每秒出流量, 统计粒度10s、60s、300s、3600s、86400s
+  - name: LanOuttraffic
+    period: 3600
+    unit: "Mbps"
+
+  # 内网入带宽, 单位: Mbps, 内网网卡的平均每秒入流量, 统计粒度10s、60s、300s、3600s、86400s
+  - name: LanIntraffic
+    period: 3600
+    unit: "Mbps"
+
+  # 外网出带宽, 单位: Mbps, 外网平均每秒出流量速率，最小粒度数据为10秒总流量/10秒计算得出，该数据为 EIP+CLB+CVM 的外网出/入带宽总和, 统计粒度10s、60s、300s、3600s、86400s
+  - name: WanOuttraffic
+    period: 3600
+    unit: "Mbps"
+
+  # 外网入带宽, 单位: Mbps, 外网平均每秒入流量速率，最小粒度数据为10秒总流量/10秒计算得出，该数据为 EIP+CLB+CVM 的外网出/入带宽总和, 统计粒度10s、60s、300s、3600s、86400s
+  - name: WanIntraffic
+    period: 3600
+    unit: "Mbps"
+
+
+disk_monitor_params:
+  # 磁盘读流量, 单位: KB/s, 磁盘读流量, 统计粒度60s、300s、3600s、86400s
+  - name: DiskReadTraffic
+    period: 3600
+    unit: "KB/s"
+
+  # 磁盘写流量, 单位: MB/s, 磁盘写流量, 统计粒度60s、300s、3600s、86400s
+  - name: DiskWriteTraffic
+    period: 3600
+    unit: "KB/s"
+
+  # 磁盘读IOPS, 单位: 个/s, 磁盘读IOPS, 统计粒度10s、60s、300s、3600s、86400s
+  - name: DiskReadIops
+    period: 3600
+    unit: "个/s"
+
+  # 磁盘写IOPS, 单位: 个/s, 磁盘写IOPS, 统计粒度10s、60s、300s、3600s、86400s
+  - name: DiskWriteIops
+    period: 3600
+    unit: "个/s"
+
+# 腾讯云服务与金山云映射表
+cvm_mapping:
+  SA3: 星河型HKEC
+  SA2: 星河型HKEC
+  MA3: 星河型HKEC
+  MA2: 星河型HKEC
+  S5: 标准型S6
+  S6: 标准型S6
+  M5: 标准型S6
+  C6: 计算优化型C7
+
+# 金山云机型参数：
+ksyun_kec:
+  星河型HKEC:
+    price:
+      cpu: 45
+      memory: 9
+      discount: 0.36
+    internal_throughput:
+      1: 1
+      2: 1
+      4: 1.5
+      8: 2
+      12: 2
+      16: 3
+      24: 3
+      32: 5
+      64: 10
+    EBS:
+      - EHDD
+      - SSD3.0
+
+  计算优化型C7:
+    price:
+      cpu: 71
+      memory: 15
+      discount: 0.36
+    internal_throughput:
+      2: 4
+      4: 6
+      8: 8
+      12: 12
+      16: 15
+      24: 20
+      32: 25
+      48: 40
+      64: 50
+      96: 75
+      108: 100
+    EBS:
+      - EHDD
+      - SSD3.0
+      - ESSD_PL0
+      - ESSD_PL1
+  标准型S6:
+    price:
+      cpu: 64
+      memory: 13
+      discount: 0.36
+    internal_throughput:
+      1: 1.5
+      2: 1.5
+      4: 2
+      8: 3
+      12: 4
+      16: 6
+      24: 6
+      32: 12
+    EBS:
+      - EHDD
+      - SSD3.0
+      - ESSD_PL0
+      - ESSD_PL1
+
+disk_mapping:
+  CLOUD_BSSD: ESSD_PL0  # 通用型SSD max 190MB/s, IOPS 10000
+  CLOUD_HSSD: ESSD_PL1 # 增强型SSD max 350MB/s, IOPS 50000
+  CLOUD_SSD: SSD3.0  # SSD云硬盘 max 260MB/s, IOPS 26000
+  CLOUD_PREMIUM: ESSD_PL0  # 高性能云硬盘 max 150MB/s, IOPS 6000
+
+ksyun_ebs:
+  EHDD:
+    price:
+      disk: 0.35
+      discount: 0.36
+    IOPS:
+      basic: 1800
+      max: 5000
+      times: 8
+    IO:
+      basic: 100
+      max: 130
+      times: 0.15
+  SSD3.0:
+    price:
+      disk: 0.8
+      discount: 0.36
+    IOPS:
+      basic: 1800
+      max: 26000
+      times: 30
+    IO:
+      basic: 120
+      max: 256
+      times: 0.5
+  ESSD_PL0:
+    price:
+      disk: 0.5
+      discount: 0.36
+    IOPS:
+      basic: 1800
+      max: 11000
+      times: 12
+    IO:
+      basic: 100
+      max: 180
+      times: 0.25
+  ESSD_PL1:
+    price:
+      disk: 1.0
+      discount: 0.36
+    IOPS:
+      basic: 1800
+      max: 55000
+      times: 50
+    IO:
+      basic: 120
+      max: 350
+      times: 0.5
