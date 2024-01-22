@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 def main():
-    # 获取CVM实例信息
+    # 调用腾讯云API获取CVM实例信息
     cvm_infos = describeInstances.get_cvm_info()
 
     # 根据配置文件过滤CVM实例信息
@@ -21,7 +21,7 @@ def main():
     # 获取所有云硬盘的信息，包含系统盘和数据盘
     disk_list_all = disk_instance_export(filtered_data)
 
-    # 获取所有CVM实例的监控数据
+    # 根据配置文件中采集的指标，获取所有CVM实例的监控数据
     logging.info(f"Step 2: 开始获取CVM实例监控数据, 共计{len(filtered_data)}台CVM实例, 请耐心等待\n\n\n")
     all_cvm_monitoring_result_dict = get_all_instance_monitoring_result(filtered_data, "QCE/CVM", 'InstanceId', config['cvm_monitor_params'])
     for monitor_values in all_cvm_monitoring_result_dict:
@@ -32,7 +32,7 @@ def main():
     list_to_excel(filtered_data, 'cvm_monitor_detail_data.xlsx', 'CVM实例信息')
     logging.info("Step 2: 所有CVM实例信息已导出到 'cvm_monitor_detail_data.xlsx' 文件，'CVM实例信息' sheet\n\n\n")
 
-    # 获取所有云硬盘的监控数据
+    # 根据配置文件中采集的指标，获取所有云硬盘的监控数据
     logging.info(f"Step 3: 开始获取云硬盘监控数据, 共计{len(disk_list_all)}块云硬盘, 请耐心等待")
     all_disk_monitoring_result_dict = get_all_instance_monitoring_result(disk_list_all, "QCE/BLOCK_STORAGE", 'DiskId', config['disk_monitor_params'])
     for monitor_values in all_disk_monitoring_result_dict:
@@ -46,14 +46,16 @@ def main():
 
 def match_ksyun():
     output_dict = {}
-    cvm_data_list = excel_to_list('/Users/guantianyun/Desktop/test_2024.xlsx', 'CVM实例信息')
-    disk_data_list = excel_to_list('/Users/guantianyun/Desktop/disk-test.xlsx', 'Disk实例信息')
-    output_dict['CVM实例信息'] = cvm_matching(cvm_data_list)
-    output_dict['Disk实例信息'] = disk_matching(disk_data_list, cvm_data_list)
 
+    # 根据配置文件中cvm_mapping实例匹配关系，匹配腾讯云CVM与金山云KEC实例，并输出至新的Excel文件
+    cvm_data_list = excel_to_list('/Users/guantianyun/Desktop/test_2024.xlsx', 'CVM实例信息')
+    output_dict['CVM实例信息'] = cvm_matching(cvm_data_list)
     list_to_excel(output_dict['CVM实例信息'], '/Users/guantianyun/Desktop/cvm_finally20240121.xlsx', 'CVM实例信息')
     logging.info("Step 4: 所有CVM实例信息已匹配金山云产品并导出到 '/Users/guantianyun/Desktop/cvm_finally20240121.xlsx' 文件，'CVM实例信息' sheet\n\n\n")
 
+    # 根据配置文件中disk_mapping实例匹配关系，匹配腾讯云Disk与金山云EBS实例，并输出至新的Excel文件
+    disk_data_list = excel_to_list('/Users/guantianyun/Desktop/disk-test.xlsx', 'Disk实例信息')
+    output_dict['Disk实例信息'] = disk_matching(disk_data_list, cvm_data_list)
     list_to_excel(output_dict['Disk实例信息'], '/Users/guantianyun/Desktop/disk_finally20240121.xlsx', 'Disk实例信息')
     logging.info("Step 4: 所有CVM实例信息已匹配金山云产品并导出到 '/Users/guantianyun/Desktop/disk_finally20240121.xlsx' 文件，'Disk实例信息' sheet\n\n\n")
 
