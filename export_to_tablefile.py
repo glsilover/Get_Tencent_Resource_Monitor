@@ -6,34 +6,12 @@ import os
 logger = logging.getLogger(__name__)
 
 
-def list_to_csv(list_data, file_path):
-    try:
-        # 找出拥有最多键的字典
-        max_keys_dict = max(list_data, key=lambda x: len(x.keys()))
-
-        # 使用这部字典的键作为列名
-        columns = max_keys_dict.keys()
-
-        # 创建并写入CSV文件
-        with open(file_path, 'w', newline='', encoding='utf-8-sig') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=columns)
-            writer.writeheader()
-            for item in list_data:
-                # 使用dict.get方法确保缺少的键返回None（在CSV中显示为空）
-                row = {col: item.get(col, None) for col in columns}
-                writer.writerow(row)
-
-        logger.info(f'数据已写入CSV文件【{file_path}】')
-
-    except Exception as e:
-        logger.error(f'写入CSV文件【{file_path}】失败', exc_info=True)
-
-
 def safe_value(value):
     # 如果值不是整数或浮点数，则将其转换为字符串
     if not isinstance(value, (int, float)):
         return str(value)
     return value
+
 
 def list_to_excel(list_data, file_path, sheet_name):
     try:
@@ -97,4 +75,3 @@ def excel_to_list(file_path, sheet_name):
         list_data.append(row_data)
 
     return list_data
-

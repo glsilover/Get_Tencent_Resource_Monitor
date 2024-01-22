@@ -9,6 +9,8 @@ from match_ksyun_ebs import disk_matching
 
 config = load_config('config.yaml')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
 def main():
     # 获取CVM实例信息
     cvm_infos = describeInstances.get_cvm_info()

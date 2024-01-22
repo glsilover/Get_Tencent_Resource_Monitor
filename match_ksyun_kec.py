@@ -5,7 +5,6 @@ config = load_config('config.yaml')
 logger = logging.getLogger(__name__)
 
 
-
 def bindwidth_judgment(instance_dict):
     try:
         if instance_dict['KsyunBandwidth(Gbps)'] > max(instance_dict['LanIntraffic_max(Mbps)'], instance_dict['LanOuttraffic_max(Mbps)']) / 1000:
